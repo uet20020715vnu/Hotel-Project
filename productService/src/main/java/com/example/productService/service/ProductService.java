@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 
 @Service
 public interface ProductService {
@@ -20,4 +22,6 @@ public interface ProductService {
     void moveToTrash(Long id);
     Page<ProductDTO> getInTrash(Pageable pageable);
     Product getById(Long id);
+    ArrayList<Long> getProductRelated(ProductDTO product);
+    ProductDTO getByRedis(Long id);
 }

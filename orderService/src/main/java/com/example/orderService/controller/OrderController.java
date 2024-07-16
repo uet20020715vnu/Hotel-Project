@@ -39,9 +39,9 @@ public class OrderController {
         return ResponseEntity.ok(string);
     }
 
-    @PutMapping()
-    public ResponseEntity<?> updateOrder(@RequestBody Order order) {
-        return ResponseEntity.ok(orderService.updateOrder(order));
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateOrder(@RequestBody OrderRequest order, @PathVariable Long id) {
+        return ResponseEntity.ok(orderService.updateOrder(order,id));
     }
 
     @DeleteMapping("{id}")

@@ -27,3 +27,13 @@ spring:
           uri: lb://userService
           predicates:
             - Path=api/v1/user/**
+        - id: FEEDBACK-SERVICE
+          uri: lb://feedbackService
+          predicates:
+            - Path=api/v1/feedbacks/**
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

@@ -149,7 +149,34 @@ public class OrderService {
         return order;
     }
 
-    public Object updateOrder(Order order) {
+    public Object updateOrder(OrderRequest orderRequest, Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+//        order.setOrderItem(null);
+//        Set<OrderItem> orderItemSet = new HashSet<>();
+        Set<OrderItem> orderItemSet = order.getOrderItem();
+        Iterator<OrderItem> itemIterator = orderItemSet.iterator();
+        while(itemIterator.hasNext()){
+            OrderItem item = itemIterator.next();
+            itemIterator.remove();
+        }
+        Integer totalAmount = 0;
+        int totalDate = orderRequest.getStartDate().until(orderRequest.getEndDate()).getDays();
+        for (Long productId : orderRequest.getOrderItem().keySet()) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProductId(productId);
+            orderItem.setOrder(order);
+            orderItem.setQuantity(orderRequest.getOrderItem().get(productId));
+            orderItem.setStartDate(orderRequest.getStartDate());
+            orderItem.setEndDate(orderRequest.getEndDate());
+            orderItemSet.add(orderItem);
+            Product product = restTemplate.getForObject("http://localhost:8083/api/v1/product/" + productId,Product.class);
+            totalAmount = totalAmount + product.getPrice()*totalDate*orderRequest.getOrderItem().get(productId);
+        }
+        order.setOrderItem(orderItemSet);
+        order.setTotalAmount(totalAmount);
+//        order.setOrderDate(now());
+//        order.setOrderStatus(OrderStatus.pending);
+        orderRepository.save(order);
         return orderRepository.save(order);
     }
 

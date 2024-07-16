@@ -1,0 +1,54 @@
+services:
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=caching_sha2_password
+    restart: always
+    networks:
+      - feedback-network
+    environment:
+      MYSQL_DATABASE: 'feedback'
+      MYSQL_ROOT_PASSWORD: 'quangthai3110'
+#    volumes:
+#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#      -  C:\ALLSOFTWARE\youtube_1\SpringGradle\data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+  feedback:
+    image: quangthai311002/feedbackdocker
+    ports:
+      - "8444:8084"
+    depends_on:
+      - mysql
+      - eureka-server
+    container_name: feedback
+    environment:
+      DB_HOST: mysql
+    networks:
+      - feedback-network
+      - microservice
+  gateway:
+    image: quangthai311002/gatewaydocker
+    ports:
+      - "8080:8080"
+    environment:
+      - eureka.instance.preferIpAddress=true
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka
+    networks:
+      - microservice
+    depends_on:
+      - eureka-server
+  eureka-server:
+    image: quangthai311002/eurekadocker
+    ports:
+      - "8761:8761"
+    container_name: eureka-server
+    environment:
+      - spring.application.name=eureka-server
+      - eureka.client.registerWithEureka=false
+      - eureka.client.fetchRegistry=false
+      - eureka.server.waitTimeInMsWhenSyncEmpty=0
+    networks:
+      - microservice
+networks:
+  microservice:
+  feedback-network:

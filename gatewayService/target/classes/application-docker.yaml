@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gatewayService
+  cloud:
+    gateway:
+      routes:
+        - id: PRODUCT-SERVICE-PUBLIC
+          uri: lb://productService
+          predicates:
+            - Path=/api/v1/product/** , /api/v1/category/**
+        - id: ORDER-SERVICE-PUBLIC
+          uri: lb://orderService
+          predicates:
+            - Path=/api/v1/order/**
+        - id: PAYMENT-SERVICE-PUBLIC
+          uri: lb://paymentService
+          predicates:
+            - Path=/api/v1/payment/**
+        - id: NOTIFICATION-SERVICE
+          uri: lb://notificationService
+          predicates:
+            - Path=api/v1/notification/**
+        - id: USER-SERVICE
+          uri: lb://userService
+          predicates:
+            - Path=api/v1/user/**
+        - id: FEEDBACK-SERVICE
+          uri: lb://feedbackService
+          predicates:
+            - Path=api/v1/feedbacks/**
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server/8761
