@@ -21,6 +21,8 @@ public class OrderItem {
     @JsonIgnore
     private Order order;
     private Long productId;
+    private Integer option;
+    private Integer numberOfGuest;
     private Integer quantity;
     @Column(name = "start_date")
     private LocalDate startDate;

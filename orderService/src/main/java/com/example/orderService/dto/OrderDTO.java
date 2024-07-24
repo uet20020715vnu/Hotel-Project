@@ -15,7 +15,7 @@ public class OrderDTO {
     private Long id;
     private Long userId;
     private LocalDateTime orderDate;
-    private Integer totalAmount;
+    private Double totalAmount;
     private Long productId;
     @FutureTime
     private LocalDateTime startDate;

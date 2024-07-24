@@ -26,7 +26,7 @@ spring:
         - id: USER-SERVICE
           uri: lb://userService
           predicates:
-            - Path=api/v1/user/**
+            - Path=/api/v1/user/**
         - id: FEEDBACK-SERVICE
           uri: lb://feedbackService
           predicates:

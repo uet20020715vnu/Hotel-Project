@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../common/common.iml" filepath="$PROJECT_DIR$/../common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/../eurekaService/eurekaService.iml" filepath="$PROJECT_DIR$/../eurekaService/eurekaService.iml" />
       <module fileurl="file://$PROJECT_DIR$/gatewayService.iml" filepath="$PROJECT_DIR$/gatewayService.iml" />
       <module fileurl="file://$PROJECT_DIR$/../notificationService/notificationService.iml" filepath="$PROJECT_DIR$/../notificationService/notificationService.iml" />

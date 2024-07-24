@@ -103,7 +103,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
     @Override
     public ArrayList<Long> getProductRelated(ProductDTO product) {
         Category category = categoryRepository.findById(product.getCategoryId()).orElse(null);

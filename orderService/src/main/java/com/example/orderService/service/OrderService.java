@@ -6,13 +6,11 @@ import com.example.common.event.CreateEventToNotification;
 import com.example.orderService.config.KafkaProducer;
 import com.example.orderService.entity.Order;
 import com.example.orderService.entity.OrderItem;
-import com.example.orderService.entity.ScheduleProduct;
 import com.example.orderService.enums.OrderStatus;
 import com.example.orderService.exception.OrderException;
 import com.example.orderService.helper.LocalDatetimeConverter;
 import com.example.orderService.repository.OrderItemRepository;
 import com.example.orderService.repository.OrderRepository;
-import com.example.orderService.repository.ScheduleProductRepository;
 import com.example.orderService.request.OrderRequest;
 import com.example.orderService.specification.OrderSpecification;
 import com.example.orderService.specification.SearchBody;
@@ -21,7 +19,6 @@ import com.example.orderService.specification.SearchCriteriaOperator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +43,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final RestTemplate restTemplate;
-    private final ScheduleProductRepository scheduleProductRepository;
     private final KafkaProducer kafkaProducer;
 
     public Page<Order> findAllAndSorting(SearchBody searchBody){
@@ -128,18 +124,20 @@ public class OrderService {
         }
         Order order = new Order();
         Set<OrderItem> orderItemSet = new HashSet<>();
-        Integer totalAmount = 0;
+        Double totalAmount = 0.0;
         int totalDate = orderRequest.getStartDate().until(orderRequest.getEndDate()).getDays();
         for (Long productId : orderRequest.getOrderItem().keySet()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(productId);
             orderItem.setOrder(order);
-            orderItem.setQuantity(orderRequest.getOrderItem().get(productId));
+            orderItem.setQuantity(orderRequest.getOrderItem().get(productId).getQuantity());
             orderItem.setStartDate(orderRequest.getStartDate());
             orderItem.setEndDate(orderRequest.getEndDate());
+            orderItem.setNumberOfGuest(orderRequest.getOrderItem().get(productId).getNumberOfGuest());
             orderItemSet.add(orderItem);
             Product product = restTemplate.getForObject("http://localhost:8083/api/v1/product/" + productId,Product.class);
-            totalAmount = totalAmount + product.getPrice()*totalDate*orderRequest.getOrderItem().get(productId);
+            totalAmount = totalAmount + product.getPrice() * ( 1 + (orderItem.getNumberOfGuest() - 1)* product.getScale())  * totalDate *
+                    orderItem.getQuantity();
         }
         order.setOrderItem(orderItemSet);
         order.setTotalAmount(totalAmount);
@@ -159,18 +157,19 @@ public class OrderService {
             OrderItem item = itemIterator.next();
             itemIterator.remove();
         }
-        Integer totalAmount = 0;
+        Double totalAmount = 0.0;
         int totalDate = orderRequest.getStartDate().until(orderRequest.getEndDate()).getDays();
         for (Long productId : orderRequest.getOrderItem().keySet()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(productId);
             orderItem.setOrder(order);
-            orderItem.setQuantity(orderRequest.getOrderItem().get(productId));
+            orderItem.setQuantity(orderRequest.getOrderItem().get(productId).getQuantity());
             orderItem.setStartDate(orderRequest.getStartDate());
             orderItem.setEndDate(orderRequest.getEndDate());
             orderItemSet.add(orderItem);
             Product product = restTemplate.getForObject("http://localhost:8083/api/v1/product/" + productId,Product.class);
-            totalAmount = totalAmount + product.getPrice()*totalDate*orderRequest.getOrderItem().get(productId);
+            totalAmount = totalAmount + product.getPrice() * ( 1 + (orderItem.getNumberOfGuest() - 1)* product.getScale())  * totalDate *
+                    orderItem.getQuantity();
         }
         order.setOrderItem(orderItemSet);
         order.setTotalAmount(totalAmount);
@@ -236,7 +235,7 @@ public class OrderService {
                 LocalDate startDate = order.getStartDate();
                 LocalDate endDate = order.getEndDate();
             for (Long productId: order.getOrderItem().keySet()) {
-                int total = order.getOrderItem().get(productId);
+                int total = order.getOrderItem().get(productId).getQuantity();
                 List<OrderItem> order1 = orderItemRepository.findByProductIdAndDoneIsTrue(productId);
                 if(order1.isEmpty()){
                     return  true;

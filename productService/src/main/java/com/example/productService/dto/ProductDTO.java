@@ -1,8 +1,5 @@
 package com.example.productService.dto;
 
-import com.example.productService.entity.Category;
-import com.example.productService.enums.Direction;
-import com.example.productService.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +12,11 @@ public class ProductDTO {
     private String name;
     private Integer price;
     private String description;
-    private ProductStatus status;
     private Integer categoryId;
-    private Double area;
-    private Integer bedroom;
-    private Direction direction;
-    private Integer facade;
+    private Integer capacity;
     private Integer quantity;
+    private Long ownerId;
+    private Integer dateRefund;
+    private double scale;
+    private Long hotelId;
 }

@@ -13,8 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryDTO {
     private String name;
-    @Nullable()
-    private Integer parent_id;
     private Integer id;
     public CategoryDTO(Integer id, String name) {
         this.id = id;

@@ -29,7 +29,7 @@ public class Order extends BaseEntity {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
     @Column(name = "total_amount")
-    private Integer totalAmount;
+    private Double totalAmount;
 //    @Column(name = "product_id")
 //    private Long productId;
     @Column(name = "status")

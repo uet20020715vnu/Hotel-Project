@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class CreateEventToNotification {
     private Long userId;
     private String email;
-    private Integer price;
+    private Double price;
 }

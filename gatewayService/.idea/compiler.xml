@@ -17,16 +17,6 @@
         <module name="userService" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="common" target="17" />
-      <module name="eurekaService" target="17" />
-      <module name="gatewayService" target="17" />
-      <module name="notificationService" target="17" />
-      <module name="orderService" target="17" />
-      <module name="paymentService" target="17" />
-      <module name="productService" target="17" />
-      <module name="userService" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

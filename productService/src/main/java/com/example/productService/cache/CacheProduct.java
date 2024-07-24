@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,7 @@ public class CacheProduct {
 
 
 //    @Scheduled(cron = "0 0 16 * * ?")
-    @Scheduled(fixedRate = 2000)
+//    @Scheduled(fixedRate = 2000)
 //    @PostConstruct
     public void initCacheProductsAll(){
         log.info("Start...");
@@ -65,5 +67,6 @@ public class CacheProduct {
 //            );
 //        log.info("Successfully...");
 //    }
+
 
 }

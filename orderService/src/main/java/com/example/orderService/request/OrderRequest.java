@@ -16,7 +16,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 public class OrderRequest {
     private Long userId;
-    private HashMap<Long,Integer> orderItem; // productId, quantity
+    private HashMap<Long,DetailRequest> orderItem; // productId, detailRequest
     private LocalDate startDate;
     private LocalDate endDate;
 }
